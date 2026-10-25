@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "academicYear": "2026/2027",
+  "grades": [
+    {
+      "code": "s1bac",
+      "grade": 1,
+      "name": "الصف الأول الثانوي الأزهري (البكالوريا الأزهرية)",
+      "track": null,
+      "status": "planned"
+    },
+    {
+      "code": "s2sci",
+      "grade": 2,
+      "name": "الصف الثاني الثانوي الأزهري",
+      "track": "علمي",
+      "status": "planned"
+    },
+    {
+      "code": "s2lit",
+      "grade": 2,
+      "name": "الصف الثاني الثانوي الأزهري",
+      "track": "أدبي",
+      "status": "planned"
+    },
+    {
+      "code": "s3sci",
+      "grade": 3,
+      "name": "الصف الثالث الثانوي الأزهري",
+      "track": "علمي",
+      "status": "available",
+      "curriculum": "grades/s3sci/curriculum.json"
+    },
+    {
+      "code": "s3lit",
+      "grade": 3,
+      "name": "الصف الثالث الثانوي الأزهري",
+      "track": "أدبي",
+      "status": "planned"
+    }
+  ]
+}
