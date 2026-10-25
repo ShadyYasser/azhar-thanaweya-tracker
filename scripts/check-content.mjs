@@ -15,6 +15,8 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const GRADES_DIR = join(ROOT, 'content', 'grades');
+// Profile flags that switch optional subjects on (profiles.show_<key>).
+const OPTIONAL_KEYS = new Set(['french', 'qiraat']);
 const errors = [];
 const err = (msg) => errors.push(msg);
 
@@ -120,6 +122,13 @@ for (const grade of gradeDirs) {
     subjectIds.add(s.id);
     if (!groups.has(s.group)) err(`${rel}: subject ${s.id} has unknown group "${s.group}"`);
     if (s.madhhab && !madhhabs.has(s.madhhab)) err(`${rel}: subject ${s.id} has unknown madhhab "${s.madhhab}"`);
+    if (s.optional && !s.optionalKey) err(`${rel}: optional subject ${s.id} needs an optionalKey`);
+    if (s.optionalKey !== undefined) {
+      if (!OPTIONAL_KEYS.has(s.optionalKey)) {
+        err(`${rel}: subject ${s.id} has unknown optionalKey "${s.optionalKey}" (known: ${[...OPTIONAL_KEYS].join(', ')})`);
+      }
+      if (s.optional !== true) err(`${rel}: subject ${s.id} has optionalKey but is not optional`);
+    }
   }
 
   for (const { subject, lesson } of lessonsOf(c)) {
@@ -139,7 +148,12 @@ for (const grade of gradeDirs) {
     const mig = readJson(migPath) ?? {};
     for (const [from, to] of Object.entries(mig)) {
       migratedFrom.add(from);
-      for (const id of Array.isArray(to) ? to : [to]) {
+      if (!from.startsWith(`${grade}-`)) err(`content/grades/${grade}/migrations.json: ${from} must start with "${grade}-"`);
+      if (!Array.isArray(to) || to.length === 0 || to.some((x) => typeof x !== 'string')) {
+        err(`content/grades/${grade}/migrations.json: ${from} must map to a non-empty array of lesson IDs`);
+        continue;
+      }
+      for (const id of to) {
         if (!lessonsOf(c).some((x) => x.lesson.id === id)) {
           err(`content/grades/${grade}/migrations.json: ${from} -> ${id}, but ${id} does not exist`);
         }

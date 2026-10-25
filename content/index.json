@@ -36,7 +36,8 @@
       "grade": 3,
       "name": "الصف الثالث الثانوي الأزهري",
       "track": "أدبي",
-      "status": "planned"
+      "status": "available",
+      "curriculum": "grades/s3lit/curriculum.json"
     }
   ]
 }

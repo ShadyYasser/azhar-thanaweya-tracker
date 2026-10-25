@@ -1,8 +1,16 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useAuth } from '../auth/AuthProvider';
-import { availableGrades, contentIndex, gradeLabel, MADHHABS } from '../lib/content';
+import {
+  availableGrades,
+  contentIndex,
+  gradeLabel,
+  loadCurriculum,
+  MADHHABS,
+  OPTIONAL_SUBJECTS,
+  optionalKeysOf,
+} from '../lib/content';
 import { supabase } from '../lib/supabase';
-import type { Madhhab, Profile } from '../lib/types';
+import type { Madhhab, OptionalKey, Profile } from '../lib/types';
 
 interface Props {
   profile: Profile;
@@ -17,7 +25,12 @@ export function ProfileForm({ profile, submitLabel, showName, onSaved }: Props) 
   const { refreshProfile } = useAuth();
   const [grade, setGrade] = useState(profile.active_grade ?? availableGrades[0]?.code ?? '');
   const [madhhab, setMadhhab] = useState<Madhhab | ''>(profile.madhhab ?? '');
-  const [showFrench, setShowFrench] = useState(profile.show_french);
+  const [optional, setOptional] = useState<Record<OptionalKey, boolean>>({
+    french: profile.show_french,
+    qiraat: profile.show_qiraat ?? false,
+  });
+  // Optional subjects the selected grade actually has; only those options are offered.
+  const [offered, setOffered] = useState<Set<OptionalKey>>(new Set());
   const [displayName, setDisplayName] = useState(profile.display_name ?? '');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,6 +40,17 @@ export function ProfileForm({ profile, submitLabel, showName, onSaved }: Props) 
     profile.active_grade && !availableGrades.some((g) => g.code === profile.active_grade)
       ? [...availableGrades, ...contentIndex.grades.filter((g) => g.code === profile.active_grade)]
       : availableGrades;
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!grade) return;
+    loadCurriculum(grade)
+      .then((c) => !cancelled && setOffered(optionalKeysOf(c)))
+      .catch(() => !cancelled && setOffered(new Set()));
+    return () => {
+      cancelled = true;
+    };
+  }, [grade]);
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -45,7 +69,13 @@ export function ProfileForm({ profile, submitLabel, showName, onSaved }: Props) 
         );
       if (enrollErr) throw new Error(enrollErr.message);
 
-      const update: Partial<Profile> = { active_grade: grade, madhhab, show_french: showFrench };
+      // Flags for options the grade doesn't offer keep their saved value.
+      const update: Partial<Profile> = {
+        active_grade: grade,
+        madhhab,
+        show_french: optional.french,
+        show_qiraat: optional.qiraat,
+      };
       if (showName) update.display_name = displayName.trim() || null;
       const { error: profErr } = await supabase.from('profiles').update(update).eq('id', profile.id);
       if (profErr) throw new Error(profErr.message);
@@ -101,10 +131,16 @@ export function ProfileForm({ profile, submitLabel, showName, onSaved }: Props) 
         <p className="hint">هيظهرلك فقه مذهبك بس، والميراث بيظهر للكل.</p>
       </fieldset>
 
-      <label className="check">
-        <input type="checkbox" checked={showFrench} onChange={(e) => setShowFrench(e.target.checked)} />
-        المعهد بيدرّس اللغة الفرنسية (لغة ثانية)
-      </label>
+      {OPTIONAL_SUBJECTS.filter((o) => offered.has(o.key)).map((o) => (
+        <label key={o.key} className="check">
+          <input
+            type="checkbox"
+            checked={optional[o.key]}
+            onChange={(e) => setOptional((prev) => ({ ...prev, [o.key]: e.target.checked }))}
+          />
+          {o.label}
+        </label>
+      ))}
 
       {error && <p className="error">{error}</p>}
       <button className="btn" type="submit" disabled={busy}>

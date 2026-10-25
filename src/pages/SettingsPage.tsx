@@ -17,7 +17,7 @@ export function SettingsPage() {
           الحساب: <span dir="ltr">{session?.user.email}</span>
         </p>
         <ProfileForm
-          key={`${profile.active_grade}-${profile.madhhab}-${profile.show_french}`}
+          key={`${profile.active_grade}-${profile.madhhab}-${profile.show_french}-${profile.show_qiraat}`}
           profile={profile}
           submitLabel="حفظ التغييرات"
           showName
@@ -25,7 +25,7 @@ export function SettingsPage() {
         />
         {saved && <p className="info">تم الحفظ.</p>}
         <p className="hint">
-          تغيير الصف أو المذهب أو الفرنسية مش بيمسح أي تقدم؛ التقدم القديم بيتخبى بس، ويرجع لو رجعت لنفس
+          تغيير الصف أو المذهب أو المواد الاختيارية مش بيمسح أي تقدم؛ التقدم القديم بيتخبى بس، ويرجع لو رجعت لنفس
           الاختيار.
         </p>
       </section>

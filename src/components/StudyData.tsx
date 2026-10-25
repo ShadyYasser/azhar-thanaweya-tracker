@@ -9,8 +9,15 @@ import {
   type ReactNode,
 } from 'react';
 import { useAuth } from '../auth/AuthProvider';
-import { loadCurriculum, visibleSubjects } from '../lib/content';
-import { applyChange, loadMyProgress, saveProgress, type ProgressMap } from '../lib/progress';
+import { loadCurriculum, loadMigrations, visibilityOf, visibleSubjects } from '../lib/content';
+import {
+  applyChange,
+  applyLessonMigrations,
+  hasPendingMigrations,
+  loadMyProgress,
+  saveProgress,
+  type ProgressMap,
+} from '../lib/progress';
 import type { Curriculum, LessonStatus, Subject } from '../lib/types';
 
 interface StudyData {
@@ -41,8 +48,18 @@ export function StudyDataProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    Promise.all([loadCurriculum(grade), loadMyProgress(userId)])
-      .then(([c, p]) => {
+    Promise.all([loadCurriculum(grade), loadMyProgress(userId), loadMigrations(grade)])
+      .then(async ([c, loaded, migrations]) => {
+        let p = loaded;
+        // Carry progress from split/merged lessons to their new IDs. Failing here must
+        // not block the page: the old rows stay intact and it is retried next load.
+        if (hasPendingMigrations(migrations, p)) {
+          try {
+            if ((await applyLessonMigrations(migrations)) > 0) p = await loadMyProgress(userId);
+          } catch (err) {
+            console.warn('apply_lesson_migrations failed', err);
+          }
+        }
         if (cancelled) return;
         setCurriculum(c);
         progressRef.current = p;
@@ -62,9 +79,16 @@ export function StudyDataProvider({ children }: { children: ReactNode }) {
   const subjects = useMemo(
     () =>
       curriculum
-        ? visibleSubjects(curriculum, { madhhab: profile?.madhhab ?? null, showFrench: profile?.show_french ?? false })
+        ? visibleSubjects(
+            curriculum,
+            visibilityOf({
+              madhhab: profile?.madhhab ?? null,
+              show_french: profile?.show_french ?? false,
+              show_qiraat: profile?.show_qiraat ?? false,
+            }),
+          )
         : [],
-    [curriculum, profile?.madhhab, profile?.show_french],
+    [curriculum, profile?.madhhab, profile?.show_french, profile?.show_qiraat],
   );
 
   const updateLesson = useCallback<StudyData['updateLesson']>(

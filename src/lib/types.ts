@@ -47,10 +47,15 @@ export interface Subject {
   periods?: string;
   units: Unit[];
   madhhab?: Madhhab;
+  // Optional subjects are shown only when the profile flag for their optionalKey is on.
   optional?: boolean;
+  optionalKey?: OptionalKey;
   note?: string;
   needsVerification?: string;
 }
+
+// content/grades/<grade>/migrations.json: old lesson ID -> new lesson IDs.
+export type LessonMigrations = Record<string, string[]>;
 
 export interface Curriculum {
   schemaVersion: number;
@@ -69,6 +74,7 @@ export interface Curriculum {
 
 export type Role = 'student' | 'admin';
 export type Madhhab = 'hanafi' | 'shafei' | 'maliki' | 'hanbali';
+export type OptionalKey = 'french' | 'qiraat';
 export type LessonStatus = 'not_started' | 'studied' | 'revised' | 'mastered';
 
 export interface Profile {
@@ -78,6 +84,7 @@ export interface Profile {
   role: Role;
   madhhab: Madhhab | null;
   show_french: boolean;
+  show_qiraat: boolean;
   active_grade: string | null;
   created_at: string;
 }

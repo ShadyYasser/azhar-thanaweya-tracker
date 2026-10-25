@@ -1,6 +1,6 @@
 import { fetchAll, supabase } from './supabase';
 import { activeLessons } from './content';
-import type { LessonProgress, LessonStatus, Subject } from './types';
+import type { LessonMigrations, LessonProgress, LessonStatus, Subject } from './types';
 
 export const STATUS_OPTIONS: { id: LessonStatus; label: string }[] = [
   { id: 'not_started', label: 'لم يبدأ' },
@@ -104,4 +104,21 @@ export async function saveProgress(
     // The log feeds later statistics; a failed log entry must not undo the saved status.
     await supabase.from('study_log').insert({ user_id, lesson_id, action: logAction });
   }
+}
+
+// True when some old lesson in `migrations` has real progress and one of its new
+// lessons has none yet, i.e. apply_lesson_migrations would copy something.
+export function hasPendingMigrations(migrations: LessonMigrations, progress: ProgressMap): boolean {
+  return Object.entries(migrations).some(([oldId, newIds]) => {
+    const p = progress.get(oldId);
+    if (!p || (p.status === 'not_started' && !p.memorized)) return false;
+    return newIds.some((id) => !progress.has(id));
+  });
+}
+
+// Copies progress from split/merged lessons to their new IDs (idempotent; RLS-scoped).
+export async function applyLessonMigrations(migrations: LessonMigrations): Promise<number> {
+  const { data, error } = await supabase.rpc('apply_lesson_migrations', { mappings: migrations });
+  if (error) throw new Error(error.message);
+  return (data as number | null) ?? 0;
 }

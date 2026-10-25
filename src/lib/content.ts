@@ -1,5 +1,15 @@
 import indexJson from '../../content/index.json';
-import type { ContentIndex, Curriculum, Lesson, Madhhab, Quiz, Subject } from './types';
+import type {
+  ContentIndex,
+  Curriculum,
+  Lesson,
+  LessonMigrations,
+  Madhhab,
+  OptionalKey,
+  Profile,
+  Quiz,
+  Subject,
+} from './types';
 
 export const contentIndex = indexJson as ContentIndex;
 
@@ -31,7 +41,16 @@ const curriculumModules = import.meta.glob<{ default: Curriculum }>(
 // only when its file exists.
 const quizModules = import.meta.glob<{ default: Quiz }>('../../content/grades/*/quizzes/*.json');
 
+const migrationModules = import.meta.glob<{ default: LessonMigrations }>(
+  '../../content/grades/*/migrations.json',
+);
+
 const curriculumCache = new Map<string, Promise<Curriculum>>();
+
+export async function loadMigrations(gradeCode: string): Promise<LessonMigrations> {
+  const loader = migrationModules[`../../content/grades/${gradeCode}/migrations.json`];
+  return loader ? (await loader()).default : {};
+}
 
 export function loadCurriculum(gradeCode: string): Promise<Curriculum> {
   let p = curriculumCache.get(gradeCode);
@@ -66,14 +85,30 @@ export function findLesson(curriculum: Curriculum, lessonId: string): { subject:
 
 export interface Visibility {
   madhhab: Madhhab | null;
-  showFrench: boolean;
+  optional: Record<OptionalKey, boolean>;
 }
 
-// Fiqh shows only for the student's madhhab; optional subjects (French) only when enabled.
+// Labels for the profile options that switch optional subjects on.
+export const OPTIONAL_SUBJECTS: { key: OptionalKey; label: string }[] = [
+  { key: 'french', label: 'المعهد بيدرّس اللغة الفرنسية (لغة ثانية)' },
+  { key: 'qiraat', label: 'بدرس القراءات (للطلاب المكفوفين)' },
+];
+
+export function visibilityOf(p: Pick<Profile, 'madhhab' | 'show_french' | 'show_qiraat'>): Visibility {
+  return { madhhab: p.madhhab, optional: { french: p.show_french, qiraat: p.show_qiraat ?? false } };
+}
+
+// Fiqh shows only for the student's madhhab; an optional subject only when the
+// profile flag for its optionalKey is on (subjects without a key count as French).
 export function isSubjectVisible(subject: Subject, v: Visibility): boolean {
   if (subject.madhhab && subject.madhhab !== v.madhhab) return false;
-  if (subject.optional && !v.showFrench) return false;
+  if (subject.optional && !v.optional[subject.optionalKey ?? 'french']) return false;
   return true;
+}
+
+// Optional-subject keys a curriculum actually uses (decides which options to offer).
+export function optionalKeysOf(curriculum: Curriculum): Set<OptionalKey> {
+  return new Set(curriculum.subjects.filter((s) => s.optional).map((s) => s.optionalKey ?? 'french'));
 }
 
 export function visibleSubjects(curriculum: Curriculum, v: Visibility): Subject[] {

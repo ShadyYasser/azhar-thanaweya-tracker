@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../auth/AuthProvider';
-import { gradeLabel, loadCurriculum, madhhabName, visibleSubjects } from '../lib/content';
+import { gradeLabel, loadCurriculum, madhhabName, visibilityOf, visibleSubjects } from '../lib/content';
 import { fetchAll, supabase } from '../lib/supabase';
 import { computeStats, type ProgressMap } from '../lib/progress';
 import type { LessonProgress, Profile, Role } from '../lib/types';
@@ -44,7 +44,7 @@ async function loadUsers(): Promise<UserRow[]> {
     if (p.active_grade && p.madhhab) {
       try {
         const c = await loadCurriculum(p.active_grade);
-        const subjects = visibleSubjects(c, { madhhab: p.madhhab, showFrench: p.show_french });
+        const subjects = visibleSubjects(c, visibilityOf(p));
         percent = computeStats(subjects, byUser.get(p.id) ?? new Map()).percent;
       } catch {
         // Grade without a curriculum file: leave it out of the average.
@@ -82,6 +82,7 @@ export function AdminPage() {
       byGrade: countBy(setUp, (u) => gradeLabel(u.active_grade)),
       byMadhhab: countBy(setUp, (u) => madhhabName(u.madhhab)),
       french: setUp.filter((u) => u.show_french).length,
+      qiraat: setUp.filter((u) => u.show_qiraat).length,
       avgPercent: percents.length ? Math.round(percents.reduce((a, b) => a + b, 0) / percents.length) : null,
       avgCount: percents.length,
     };
@@ -158,6 +159,10 @@ export function AdminPage() {
           <span className="muted small">بيدرسوا الفرنسية</span>
           <span className="big-percent">{stats.french}</span>
         </div>
+        <div className="card stat">
+          <span className="muted small">بيدرسوا القراءات</span>
+          <span className="big-percent">{stats.qiraat}</span>
+        </div>
       </div>
 
       <section className="card">
@@ -190,6 +195,8 @@ export function AdminPage() {
                 </span>
                 <span className="muted small">
                   {u.active_grade ? `${gradeLabel(u.active_grade)} · ${madhhabName(u.madhhab)}` : 'لسه ما كمّلش الإعداد'}
+                  {u.show_french && ' · فرنسي'}
+                  {u.show_qiraat && ' · قراءات'}
                   {u.percent !== null && ` · ${u.percent}%`}
                 </span>
               </div>
