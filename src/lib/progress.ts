@@ -106,19 +106,34 @@ export async function saveProgress(
   }
 }
 
-// True when some old lesson in `migrations` has real progress and one of its new
-// lessons has none yet, i.e. apply_lesson_migrations would copy something.
-export function hasPendingMigrations(migrations: LessonMigrations, progress: ProgressMap): boolean {
-  return Object.entries(migrations).some(([oldId, newIds]) => {
-    const p = progress.get(oldId);
-    if (!p || (p.status === 'not_started' && !p.memorized)) return false;
-    return newIds.some((id) => !progress.has(id));
-  });
-}
-
-// Copies progress from split/merged lessons to their new IDs (idempotent; RLS-scoped).
-export async function applyLessonMigrations(migrations: LessonMigrations): Promise<number> {
-  const { data, error } = await supabase.rpc('apply_lesson_migrations', { mappings: migrations });
-  if (error) throw new Error(error.message);
-  return (data as number | null) ?? 0;
+// Copies progress from split/merged lessons to their new IDs via the
+// apply_lesson_migrations RPC (RLS-scoped; copies, never overwrites or deletes).
+// The RPC remembers which (old -> new) pairs each user went through, so a still-active
+// old lesson studied after the split doesn't spill onto the lessons split off from it.
+// It must run even without progress (to record the pairs), but only once per user,
+// grade and content version here; repeating it (new device, cleared storage) is harmless.
+export async function runLessonMigrations(
+  userId: string,
+  gradeCode: string,
+  contentVersion: string,
+  migrations: LessonMigrations,
+): Promise<number> {
+  const key = `lesson-migrations:${userId}:${gradeCode}`;
+  try {
+    if (localStorage.getItem(key) === contentVersion) return 0;
+  } catch {
+    // Storage unavailable: just run it.
+  }
+  let copied = 0;
+  if (Object.keys(migrations).length > 0) {
+    const { data, error } = await supabase.rpc('apply_lesson_migrations', { mappings: migrations });
+    if (error) throw new Error(error.message);
+    copied = (data as number | null) ?? 0;
+  }
+  try {
+    localStorage.setItem(key, contentVersion);
+  } catch {
+    // Not remembered; the next load runs it again, which changes nothing.
+  }
+  return copied;
 }

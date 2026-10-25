@@ -23,7 +23,7 @@ The full product plan (Arabic) is in `خطة-الموقع.md` — read it before
 1. Progress rows reference **lesson IDs** (`s3sci-nahw-003`). Never rename, renumber or delete an existing ID.
 2. New lesson → new ID (next number in that subject), wherever it sits in the list.
 3. Lesson removed from the syllabus → `"archived": true`, never delete it.
-4. Split/merge → `migrations.json` next to the curriculum maps old ID → array of new IDs (the old lessons stay, `archived`). On load the site calls the `apply_lesson_migrations(mappings)` RPC (security invoker, RLS-scoped, idempotent) when an old lesson has progress and a new one has none: it copies status/memorized/dates/revision_count to new IDs without a row, never overwrites, never deletes. Archived lessons are hidden and excluded from completion.
+4. Split/merge → `migrations.json` next to the curriculum maps old ID → array of new IDs. The old ID is either `archived` (fully split; such lessons go in a trailing all-archived unit) or still active (parts were split off it). The site calls the `apply_lesson_migrations(mappings)` RPC once per user, grade and `contentVersion` (remembered in localStorage; repeating is harmless): it copies status/memorized/dates/revision_count to new IDs without a row (most advanced source wins on merges), never overwrites, never deletes, and records each (old → new) pair in `lesson_migrations_applied` so a pair applies at most once per user (progress on a still-active old lesson after the split never spills onto its parts). Archived lessons and all-archived units are hidden and excluded from completion.
 5. Bump `contentVersion` on every content change.
 6. Add a CI check that fails on duplicate IDs or on IDs that existed on `main` and disappeared.
 
@@ -33,6 +33,7 @@ Tables: `profiles` (role `student`|`admin`, email (trigger-synced), madhhab, sho
 - Users must not be able to change their own `role` (enforce in policy or trigger).
 - Create the `profiles` row automatically on signup (trigger on `auth.users`).
 - Clients may update only `display_name`, `madhhab`, `show_french`, `show_qiraat`, `active_grade`, `role` (column grants; `role` is further guarded by a trigger and the last admin cannot be demoted).
+- `lesson_migrations_applied` (user_id, old_lesson_id, new_lesson_id): pairs already applied per user.
 - RPCs: `apply_lesson_migrations` (security invoker) and `admin_delete_user` (security definer by design; admins only, never self or another admin).
 - Nothing in the schema is grade-specific; adding a grade needs no migration.
 - Keep every schema change as a SQL file in `supabase/migrations/` (timestamped) so it can be re-applied.

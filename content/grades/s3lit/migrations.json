@@ -1,0 +1,305 @@
+{
+  "s3lit-miras-001": [
+    "s3lit-miras-015",
+    "s3lit-miras-016"
+  ],
+  "s3lit-miras-002": [
+    "s3lit-miras-017"
+  ],
+  "s3lit-miras-003": [
+    "s3lit-miras-018"
+  ],
+  "s3lit-miras-004": [
+    "s3lit-miras-019",
+    "s3lit-miras-020"
+  ],
+  "s3lit-miras-005": [
+    "s3lit-miras-021"
+  ],
+  "s3lit-miras-007": [
+    "s3lit-miras-022"
+  ],
+  "s3lit-miras-008": [
+    "s3lit-miras-023"
+  ],
+  "s3lit-miras-009": [
+    "s3lit-miras-024",
+    "s3lit-miras-025"
+  ],
+  "s3lit-miras-012": [
+    "s3lit-miras-026"
+  ],
+  "s3lit-miras-013": [
+    "s3lit-miras-027"
+  ],
+  "s3lit-miras-014": [
+    "s3lit-miras-028"
+  ],
+  "s3lit-sarf-001": [
+    "s3lit-sarf-021"
+  ],
+  "s3lit-sarf-003": [
+    "s3lit-sarf-022",
+    "s3lit-sarf-023",
+    "s3lit-sarf-024",
+    "s3lit-sarf-025",
+    "s3lit-sarf-026"
+  ],
+  "s3lit-sarf-005": [
+    "s3lit-sarf-027",
+    "s3lit-sarf-028",
+    "s3lit-sarf-029"
+  ],
+  "s3lit-sarf-008": [
+    "s3lit-sarf-030",
+    "s3lit-sarf-031",
+    "s3lit-sarf-032"
+  ],
+  "s3lit-sarf-009": [
+    "s3lit-sarf-033",
+    "s3lit-sarf-034",
+    "s3lit-sarf-035",
+    "s3lit-sarf-036",
+    "s3lit-sarf-037",
+    "s3lit-sarf-038",
+    "s3lit-sarf-039"
+  ],
+  "s3lit-sarf-010": [
+    "s3lit-sarf-040",
+    "s3lit-sarf-041"
+  ],
+  "s3lit-sarf-011": [
+    "s3lit-sarf-042",
+    "s3lit-sarf-043"
+  ],
+  "s3lit-sarf-018": [
+    "s3lit-sarf-044",
+    "s3lit-sarf-045",
+    "s3lit-sarf-046",
+    "s3lit-sarf-047"
+  ],
+  "s3lit-sarf-019": [
+    "s3lit-sarf-048",
+    "s3lit-sarf-049",
+    "s3lit-sarf-050"
+  ],
+  "s3lit-fiqh-maliki-001": [
+    "s3lit-fiqh-maliki-021",
+    "s3lit-fiqh-maliki-022",
+    "s3lit-fiqh-maliki-023",
+    "s3lit-fiqh-maliki-024",
+    "s3lit-fiqh-maliki-025",
+    "s3lit-fiqh-maliki-026",
+    "s3lit-fiqh-maliki-027"
+  ],
+  "s3lit-fiqh-maliki-003": [
+    "s3lit-fiqh-maliki-028",
+    "s3lit-fiqh-maliki-029"
+  ],
+  "s3lit-fiqh-maliki-005": [
+    "s3lit-fiqh-maliki-030"
+  ],
+  "s3lit-fiqh-maliki-006": [
+    "s3lit-fiqh-maliki-031"
+  ],
+  "s3lit-fiqh-maliki-007": [
+    "s3lit-fiqh-maliki-032"
+  ],
+  "s3lit-fiqh-maliki-009": [
+    "s3lit-fiqh-maliki-033"
+  ],
+  "s3lit-fiqh-maliki-011": [
+    "s3lit-fiqh-maliki-034",
+    "s3lit-fiqh-maliki-035",
+    "s3lit-fiqh-maliki-036",
+    "s3lit-fiqh-maliki-037"
+  ],
+  "s3lit-fiqh-maliki-012": [
+    "s3lit-fiqh-maliki-038",
+    "s3lit-fiqh-maliki-039",
+    "s3lit-fiqh-maliki-040",
+    "s3lit-fiqh-maliki-041",
+    "s3lit-fiqh-maliki-042",
+    "s3lit-fiqh-maliki-043",
+    "s3lit-fiqh-maliki-044",
+    "s3lit-fiqh-maliki-045"
+  ],
+  "s3lit-fiqh-maliki-013": [
+    "s3lit-fiqh-maliki-046",
+    "s3lit-fiqh-maliki-047"
+  ],
+  "s3lit-fiqh-maliki-014": [
+    "s3lit-fiqh-maliki-048",
+    "s3lit-fiqh-maliki-049",
+    "s3lit-fiqh-maliki-050"
+  ],
+  "s3lit-fiqh-maliki-018": [
+    "s3lit-fiqh-maliki-051"
+  ],
+  "s3lit-fiqh-hanbali-001": [
+    "s3lit-fiqh-hanbali-008",
+    "s3lit-fiqh-hanbali-009",
+    "s3lit-fiqh-hanbali-010",
+    "s3lit-fiqh-hanbali-011",
+    "s3lit-fiqh-hanbali-012",
+    "s3lit-fiqh-hanbali-013",
+    "s3lit-fiqh-hanbali-014",
+    "s3lit-fiqh-hanbali-015",
+    "s3lit-fiqh-hanbali-016"
+  ],
+  "s3lit-fiqh-hanbali-002": [
+    "s3lit-fiqh-hanbali-017",
+    "s3lit-fiqh-hanbali-018",
+    "s3lit-fiqh-hanbali-019",
+    "s3lit-fiqh-hanbali-020",
+    "s3lit-fiqh-hanbali-021"
+  ],
+  "s3lit-fiqh-hanbali-003": [
+    "s3lit-fiqh-hanbali-022",
+    "s3lit-fiqh-hanbali-023",
+    "s3lit-fiqh-hanbali-024",
+    "s3lit-fiqh-hanbali-025"
+  ],
+  "s3lit-fiqh-hanbali-004": [
+    "s3lit-fiqh-hanbali-026"
+  ],
+  "s3lit-fiqh-hanbali-005": [
+    "s3lit-fiqh-hanbali-027",
+    "s3lit-fiqh-hanbali-028",
+    "s3lit-fiqh-hanbali-029"
+  ],
+  "s3lit-fiqh-hanbali-006": [
+    "s3lit-fiqh-hanbali-030",
+    "s3lit-fiqh-hanbali-031",
+    "s3lit-fiqh-hanbali-032"
+  ],
+  "s3lit-fiqh-hanbali-007": [
+    "s3lit-fiqh-hanbali-033",
+    "s3lit-fiqh-hanbali-034",
+    "s3lit-fiqh-hanbali-035"
+  ],
+  "s3lit-history-001": [
+    "s3lit-history-010",
+    "s3lit-history-011"
+  ],
+  "s3lit-history-002": [
+    "s3lit-history-012"
+  ],
+  "s3lit-history-003": [
+    "s3lit-history-013",
+    "s3lit-history-014",
+    "s3lit-history-015",
+    "s3lit-history-016",
+    "s3lit-history-017",
+    "s3lit-history-018",
+    "s3lit-history-019",
+    "s3lit-history-020"
+  ],
+  "s3lit-history-004": [
+    "s3lit-history-021",
+    "s3lit-history-022",
+    "s3lit-history-023",
+    "s3lit-history-024",
+    "s3lit-history-025",
+    "s3lit-history-026",
+    "s3lit-history-027",
+    "s3lit-history-028",
+    "s3lit-history-029"
+  ],
+  "s3lit-history-005": [
+    "s3lit-history-030",
+    "s3lit-history-031",
+    "s3lit-history-032",
+    "s3lit-history-033",
+    "s3lit-history-034",
+    "s3lit-history-035"
+  ],
+  "s3lit-history-006": [
+    "s3lit-history-036",
+    "s3lit-history-037",
+    "s3lit-history-038",
+    "s3lit-history-039",
+    "s3lit-history-040",
+    "s3lit-history-041"
+  ],
+  "s3lit-history-007": [
+    "s3lit-history-042",
+    "s3lit-history-043"
+  ],
+  "s3lit-history-008": [
+    "s3lit-history-044",
+    "s3lit-history-045",
+    "s3lit-history-046",
+    "s3lit-history-047",
+    "s3lit-history-048",
+    "s3lit-history-049"
+  ],
+  "s3lit-qiraat-001": [
+    "s3lit-qiraat-006",
+    "s3lit-qiraat-007",
+    "s3lit-qiraat-008"
+  ],
+  "s3lit-qiraat-002": [
+    "s3lit-qiraat-009",
+    "s3lit-qiraat-010",
+    "s3lit-qiraat-011"
+  ],
+  "s3lit-qiraat-003": [
+    "s3lit-qiraat-012",
+    "s3lit-qiraat-013",
+    "s3lit-qiraat-014",
+    "s3lit-qiraat-015",
+    "s3lit-qiraat-016"
+  ],
+  "s3lit-qiraat-004": [
+    "s3lit-qiraat-017",
+    "s3lit-qiraat-018",
+    "s3lit-qiraat-019",
+    "s3lit-qiraat-020",
+    "s3lit-qiraat-021",
+    "s3lit-qiraat-022",
+    "s3lit-qiraat-023",
+    "s3lit-qiraat-024",
+    "s3lit-qiraat-025",
+    "s3lit-qiraat-026",
+    "s3lit-qiraat-027",
+    "s3lit-qiraat-028",
+    "s3lit-qiraat-029",
+    "s3lit-qiraat-030",
+    "s3lit-qiraat-031",
+    "s3lit-qiraat-032",
+    "s3lit-qiraat-033",
+    "s3lit-qiraat-034",
+    "s3lit-qiraat-035",
+    "s3lit-qiraat-036",
+    "s3lit-qiraat-037"
+  ],
+  "s3lit-qiraat-005": [
+    "s3lit-qiraat-038",
+    "s3lit-qiraat-039",
+    "s3lit-qiraat-040",
+    "s3lit-qiraat-041",
+    "s3lit-qiraat-042"
+  ],
+  "s3lit-english-017": [
+    "s3lit-english-021",
+    "s3lit-english-022",
+    "s3lit-english-023",
+    "s3lit-english-024"
+  ],
+  "s3lit-english-018": [
+    "s3lit-english-025",
+    "s3lit-english-026",
+    "s3lit-english-027"
+  ],
+  "s3lit-english-019": [
+    "s3lit-english-028",
+    "s3lit-english-029",
+    "s3lit-english-030"
+  ],
+  "s3lit-english-020": [
+    "s3lit-english-031",
+    "s3lit-english-032",
+    "s3lit-english-033"
+  ]
+}

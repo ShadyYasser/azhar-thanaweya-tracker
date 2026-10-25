@@ -12,9 +12,8 @@ import { useAuth } from '../auth/AuthProvider';
 import { loadCurriculum, loadMigrations, visibilityOf, visibleSubjects } from '../lib/content';
 import {
   applyChange,
-  applyLessonMigrations,
-  hasPendingMigrations,
   loadMyProgress,
+  runLessonMigrations,
   saveProgress,
   type ProgressMap,
 } from '../lib/progress';
@@ -53,12 +52,12 @@ export function StudyDataProvider({ children }: { children: ReactNode }) {
         let p = loaded;
         // Carry progress from split/merged lessons to their new IDs. Failing here must
         // not block the page: the old rows stay intact and it is retried next load.
-        if (hasPendingMigrations(migrations, p)) {
-          try {
-            if ((await applyLessonMigrations(migrations)) > 0) p = await loadMyProgress(userId);
-          } catch (err) {
-            console.warn('apply_lesson_migrations failed', err);
+        try {
+          if ((await runLessonMigrations(userId, grade, c.contentVersion, migrations)) > 0) {
+            p = await loadMyProgress(userId);
           }
+        } catch (err) {
+          console.warn('apply_lesson_migrations failed', err);
         }
         if (cancelled) return;
         setCurriculum(c);

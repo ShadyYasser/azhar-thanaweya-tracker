@@ -50,5 +50,335 @@
   "s3sci-nahw-008": [
     "s3sci-nahw-047",
     "s3sci-nahw-048"
+  ],
+  "s3sci-miras-001": [
+    "s3sci-miras-015",
+    "s3sci-miras-016"
+  ],
+  "s3sci-miras-002": [
+    "s3sci-miras-017"
+  ],
+  "s3sci-miras-003": [
+    "s3sci-miras-018"
+  ],
+  "s3sci-miras-004": [
+    "s3sci-miras-019",
+    "s3sci-miras-020"
+  ],
+  "s3sci-miras-005": [
+    "s3sci-miras-021"
+  ],
+  "s3sci-miras-007": [
+    "s3sci-miras-022"
+  ],
+  "s3sci-miras-008": [
+    "s3sci-miras-023"
+  ],
+  "s3sci-miras-009": [
+    "s3sci-miras-024",
+    "s3sci-miras-025"
+  ],
+  "s3sci-miras-012": [
+    "s3sci-miras-026"
+  ],
+  "s3sci-miras-013": [
+    "s3sci-miras-027"
+  ],
+  "s3sci-miras-014": [
+    "s3sci-miras-028"
+  ],
+  "s3sci-sarf-001": [
+    "s3sci-sarf-015"
+  ],
+  "s3sci-sarf-003": [
+    "s3sci-sarf-016",
+    "s3sci-sarf-017",
+    "s3sci-sarf-018",
+    "s3sci-sarf-019",
+    "s3sci-sarf-020"
+  ],
+  "s3sci-sarf-005": [
+    "s3sci-sarf-021",
+    "s3sci-sarf-022",
+    "s3sci-sarf-023"
+  ],
+  "s3sci-sarf-008": [
+    "s3sci-sarf-024",
+    "s3sci-sarf-025",
+    "s3sci-sarf-026",
+    "s3sci-sarf-027"
+  ],
+  "s3sci-sarf-009": [
+    "s3sci-sarf-028",
+    "s3sci-sarf-029",
+    "s3sci-sarf-030",
+    "s3sci-sarf-031",
+    "s3sci-sarf-032",
+    "s3sci-sarf-033"
+  ],
+  "s3sci-sarf-010": [
+    "s3sci-sarf-034",
+    "s3sci-sarf-035",
+    "s3sci-sarf-036",
+    "s3sci-sarf-037"
+  ],
+  "s3sci-fiqh-maliki-001": [
+    "s3sci-fiqh-maliki-018",
+    "s3sci-fiqh-maliki-019",
+    "s3sci-fiqh-maliki-020",
+    "s3sci-fiqh-maliki-021",
+    "s3sci-fiqh-maliki-022",
+    "s3sci-fiqh-maliki-023"
+  ],
+  "s3sci-fiqh-maliki-003": [
+    "s3sci-fiqh-maliki-024",
+    "s3sci-fiqh-maliki-025"
+  ],
+  "s3sci-fiqh-maliki-005": [
+    "s3sci-fiqh-maliki-026"
+  ],
+  "s3sci-fiqh-maliki-006": [
+    "s3sci-fiqh-maliki-027"
+  ],
+  "s3sci-fiqh-maliki-007": [
+    "s3sci-fiqh-maliki-028"
+  ],
+  "s3sci-fiqh-maliki-009": [
+    "s3sci-fiqh-maliki-029"
+  ],
+  "s3sci-fiqh-maliki-010": [
+    "s3sci-fiqh-maliki-030",
+    "s3sci-fiqh-maliki-031",
+    "s3sci-fiqh-maliki-032",
+    "s3sci-fiqh-maliki-033"
+  ],
+  "s3sci-fiqh-maliki-011": [
+    "s3sci-fiqh-maliki-034",
+    "s3sci-fiqh-maliki-035",
+    "s3sci-fiqh-maliki-036",
+    "s3sci-fiqh-maliki-037"
+  ],
+  "s3sci-fiqh-maliki-015": [
+    "s3sci-fiqh-maliki-038"
+  ],
+  "s3sci-fiqh-hanbali-001": [
+    "s3sci-fiqh-hanbali-008",
+    "s3sci-fiqh-hanbali-009",
+    "s3sci-fiqh-hanbali-010",
+    "s3sci-fiqh-hanbali-011",
+    "s3sci-fiqh-hanbali-012",
+    "s3sci-fiqh-hanbali-013",
+    "s3sci-fiqh-hanbali-014"
+  ],
+  "s3sci-fiqh-hanbali-002": [
+    "s3sci-fiqh-hanbali-015",
+    "s3sci-fiqh-hanbali-016",
+    "s3sci-fiqh-hanbali-017",
+    "s3sci-fiqh-hanbali-018"
+  ],
+  "s3sci-fiqh-hanbali-003": [
+    "s3sci-fiqh-hanbali-019",
+    "s3sci-fiqh-hanbali-020"
+  ],
+  "s3sci-fiqh-hanbali-004": [
+    "s3sci-fiqh-hanbali-021"
+  ],
+  "s3sci-fiqh-hanbali-005": [
+    "s3sci-fiqh-hanbali-022",
+    "s3sci-fiqh-hanbali-023",
+    "s3sci-fiqh-hanbali-024"
+  ],
+  "s3sci-fiqh-hanbali-006": [
+    "s3sci-fiqh-hanbali-025",
+    "s3sci-fiqh-hanbali-026",
+    "s3sci-fiqh-hanbali-027"
+  ],
+  "s3sci-fiqh-hanbali-007": [
+    "s3sci-fiqh-hanbali-028",
+    "s3sci-fiqh-hanbali-029"
+  ],
+  "s3sci-physics-004": [
+    "s3sci-physics-041",
+    "s3sci-physics-042"
+  ],
+  "s3sci-physics-006": [
+    "s3sci-physics-043"
+  ],
+  "s3sci-physics-007": [
+    "s3sci-physics-044"
+  ],
+  "s3sci-physics-009": [
+    "s3sci-physics-045"
+  ],
+  "s3sci-physics-010": [
+    "s3sci-physics-046"
+  ],
+  "s3sci-physics-016": [
+    "s3sci-physics-047",
+    "s3sci-physics-048"
+  ],
+  "s3sci-physics-018": [
+    "s3sci-physics-049",
+    "s3sci-physics-050"
+  ],
+  "s3sci-physics-019": [
+    "s3sci-physics-051"
+  ],
+  "s3sci-physics-023": [
+    "s3sci-physics-052"
+  ],
+  "s3sci-physics-024": [
+    "s3sci-physics-053"
+  ],
+  "s3sci-physics-029": [
+    "s3sci-physics-028"
+  ],
+  "s3sci-physics-034": [
+    "s3sci-physics-033"
+  ],
+  "s3sci-chemistry-001": [
+    "s3sci-chemistry-029"
+  ],
+  "s3sci-chemistry-002": [
+    "s3sci-chemistry-030"
+  ],
+  "s3sci-chemistry-003": [
+    "s3sci-chemistry-031"
+  ],
+  "s3sci-chemistry-005": [
+    "s3sci-chemistry-032",
+    "s3sci-chemistry-033"
+  ],
+  "s3sci-chemistry-007": [
+    "s3sci-chemistry-034"
+  ],
+  "s3sci-chemistry-008": [
+    "s3sci-chemistry-035"
+  ],
+  "s3sci-chemistry-009": [
+    "s3sci-chemistry-036"
+  ],
+  "s3sci-chemistry-011": [
+    "s3sci-chemistry-037"
+  ],
+  "s3sci-chemistry-012": [
+    "s3sci-chemistry-038"
+  ],
+  "s3sci-chemistry-015": [
+    "s3sci-chemistry-039"
+  ],
+  "s3sci-chemistry-016": [
+    "s3sci-chemistry-040"
+  ],
+  "s3sci-chemistry-018": [
+    "s3sci-chemistry-041"
+  ],
+  "s3sci-chemistry-020": [
+    "s3sci-chemistry-042",
+    "s3sci-chemistry-043"
+  ],
+  "s3sci-chemistry-021": [
+    "s3sci-chemistry-044"
+  ],
+  "s3sci-chemistry-022": [
+    "s3sci-chemistry-045",
+    "s3sci-chemistry-046"
+  ],
+  "s3sci-chemistry-024": [
+    "s3sci-chemistry-047",
+    "s3sci-chemistry-048"
+  ],
+  "s3sci-chemistry-025": [
+    "s3sci-chemistry-049",
+    "s3sci-chemistry-050",
+    "s3sci-chemistry-051",
+    "s3sci-chemistry-052",
+    "s3sci-chemistry-053"
+  ],
+  "s3sci-chemistry-027": [
+    "s3sci-chemistry-054"
+  ],
+  "s3sci-chemistry-028": [
+    "s3sci-chemistry-055"
+  ],
+  "s3sci-biology-002": [
+    "s3sci-biology-021"
+  ],
+  "s3sci-biology-003": [
+    "s3sci-biology-022"
+  ],
+  "s3sci-biology-004": [
+    "s3sci-biology-023"
+  ],
+  "s3sci-biology-005": [
+    "s3sci-biology-024"
+  ],
+  "s3sci-biology-006": [
+    "s3sci-biology-023",
+    "s3sci-biology-024"
+  ],
+  "s3sci-biology-009": [
+    "s3sci-biology-025",
+    "s3sci-biology-026"
+  ],
+  "s3sci-biology-010": [
+    "s3sci-biology-027",
+    "s3sci-biology-028",
+    "s3sci-biology-029",
+    "s3sci-biology-030",
+    "s3sci-biology-031"
+  ],
+  "s3sci-biology-011": [
+    "s3sci-biology-032",
+    "s3sci-biology-033",
+    "s3sci-biology-034"
+  ],
+  "s3sci-biology-013": [
+    "s3sci-biology-035"
+  ],
+  "s3sci-biology-015": [
+    "s3sci-biology-036"
+  ],
+  "s3sci-biology-016": [
+    "s3sci-biology-037"
+  ],
+  "s3sci-biology-018": [
+    "s3sci-biology-038"
+  ],
+  "s3sci-biology-019": [
+    "s3sci-biology-039"
+  ],
+  "s3sci-biology-020": [
+    "s3sci-biology-040",
+    "s3sci-biology-041",
+    "s3sci-biology-042",
+    "s3sci-biology-043",
+    "s3sci-biology-044",
+    "s3sci-biology-045",
+    "s3sci-biology-046",
+    "s3sci-biology-047",
+    "s3sci-biology-048",
+    "s3sci-biology-049"
+  ],
+  "s3sci-english-017": [
+    "s3sci-english-021",
+    "s3sci-english-022",
+    "s3sci-english-023",
+    "s3sci-english-024"
+  ],
+  "s3sci-english-018": [
+    "s3sci-english-025",
+    "s3sci-english-026",
+    "s3sci-english-027"
+  ],
+  "s3sci-english-019": [
+    "s3sci-english-028",
+    "s3sci-english-029",
+    "s3sci-english-030"
+  ],
+  "s3sci-english-020": [
+    "s3sci-english-031",
+    "s3sci-english-032",
+    "s3sci-english-033"
   ]
 }
