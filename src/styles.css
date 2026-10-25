@@ -756,3 +756,26 @@ textarea {
   color: var(--error);
   font-weight: 700;
 }
+
+.user-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.danger-btn {
+  border: 1px solid var(--error);
+  background: transparent;
+  color: var(--error);
+  border-radius: 8px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.danger-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

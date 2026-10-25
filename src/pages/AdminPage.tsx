@@ -107,6 +107,28 @@ export function AdminPage() {
     setUsers((list) => list?.map((u) => (u.id === user.id ? { ...u, role } : u)) ?? null);
   };
 
+  // Deletes the account and all its progress (admin_delete_user cascades); irreversible.
+  const deleteUser = async (user: UserRow) => {
+    const who = user.email || user.display_name || 'المستخدم ده';
+    const ok = window.confirm(
+      `هتمسح حساب ${who} نهائياً مع كل تقدمه ومحاولات الكويز بتاعته.\nمش هينفع ترجّعه بعد كده. متأكد؟`,
+    );
+    if (!ok) return;
+    setBusyId(user.id);
+    setRoleError(null);
+    const { error: err } = await supabase.rpc('admin_delete_user', { target: user.id });
+    setBusyId(null);
+    if (err) {
+      setRoleError(
+        err.message.includes('demote the admin')
+          ? 'شيل صلاحية الـ admin من الحساب الأول، وبعدين امسحه.'
+          : `ما اتمسحش الحساب: ${err.message}`,
+      );
+      return;
+    }
+    setUsers((list) => list?.filter((u) => u.id !== user.id) ?? null);
+  };
+
   if (error) return <p className="error">تعذّر تحميل البيانات: {error}</p>;
   if (!users || !stats) return <p className="muted">جارٍ التحميل…</p>;
 
@@ -149,7 +171,7 @@ export function AdminPage() {
       </section>
 
       <section className="card">
-        <h2>المستخدمين والأدوار</h2>
+        <h2>إدارة المستخدمين</h2>
         <input
           type="search"
           className="search"
@@ -171,18 +193,30 @@ export function AdminPage() {
                   {u.percent !== null && ` · ${u.percent}%`}
                 </span>
               </div>
-              <label className="role-select">
-                <span className="sr-only">الدور</span>
-                <select
-                  value={u.role}
-                  disabled={busyId === u.id || u.id === me?.id}
-                  title={u.id === me?.id ? 'مينفعش تغيّر دورك بنفسك' : undefined}
-                  onChange={(e) => void changeRole(u, e.target.value as Role)}
-                >
-                  <option value="student">طالب</option>
-                  <option value="admin">متحكم (admin)</option>
-                </select>
-              </label>
+              <div className="user-actions">
+                <label className="role-select">
+                  <span className="sr-only">الدور</span>
+                  <select
+                    value={u.role}
+                    disabled={busyId === u.id || u.id === me?.id}
+                    title={u.id === me?.id ? 'مينفعش تغيّر دورك بنفسك' : undefined}
+                    onChange={(e) => void changeRole(u, e.target.value as Role)}
+                  >
+                    <option value="student">طالب</option>
+                    <option value="admin">متحكم (admin)</option>
+                  </select>
+                </label>
+                {u.id !== me?.id && (
+                  <button
+                    className="danger-btn"
+                    disabled={busyId === u.id || u.role === 'admin'}
+                    title={u.role === 'admin' ? 'شيل صلاحية الـ admin الأول' : undefined}
+                    onClick={() => void deleteUser(u)}
+                  >
+                    مسح الحساب
+                  </button>
+                )}
+              </div>
             </li>
           ))}
           {shown.length === 0 && <li className="muted">مفيش نتايج.</li>}
