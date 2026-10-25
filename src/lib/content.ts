@@ -1,5 +1,5 @@
 import indexJson from '../../content/index.json';
-import type { ContentIndex, Curriculum, Lesson, Madhhab, Subject } from './types';
+import type { ContentIndex, Curriculum, Lesson, Madhhab, Quiz, Subject } from './types';
 
 export const contentIndex = indexJson as ContentIndex;
 
@@ -29,7 +29,7 @@ const curriculumModules = import.meta.glob<{ default: Curriculum }>(
 
 // Quiz files (content/grades/<grade>/quizzes/<lessonId>.json); a lesson has a quiz
 // only when its file exists.
-const quizModules = import.meta.glob('../../content/grades/*/quizzes/*.json');
+const quizModules = import.meta.glob<{ default: Quiz }>('../../content/grades/*/quizzes/*.json');
 
 const curriculumCache = new Map<string, Promise<Curriculum>>();
 
@@ -47,6 +47,21 @@ export function loadCurriculum(gradeCode: string): Promise<Curriculum> {
 
 export function hasQuiz(gradeCode: string, lessonId: string): boolean {
   return `../../content/grades/${gradeCode}/quizzes/${lessonId}.json` in quizModules;
+}
+
+export async function loadQuiz(gradeCode: string, lessonId: string): Promise<Quiz | null> {
+  const loader = quizModules[`../../content/grades/${gradeCode}/quizzes/${lessonId}.json`];
+  return loader ? (await loader()).default : null;
+}
+
+export function findLesson(curriculum: Curriculum, lessonId: string): { subject: Subject; lesson: Lesson } | null {
+  for (const subject of curriculum.subjects) {
+    for (const u of subject.units) {
+      const lesson = u.lessons.find((l) => l.id === lessonId);
+      if (lesson) return { subject, lesson };
+    }
+  }
+  return null;
 }
 
 export interface Visibility {

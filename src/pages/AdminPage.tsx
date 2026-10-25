@@ -1,18 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useAuth } from '../auth/AuthProvider';
 import { gradeLabel, loadCurriculum, madhhabName, visibleSubjects } from '../lib/content';
 import { fetchAll, supabase } from '../lib/supabase';
 import { computeStats, type ProgressMap } from '../lib/progress';
-import type { LessonProgress, Profile } from '../lib/types';
+import type { LessonProgress, Profile, Role } from '../lib/types';
 
-interface AdminStats {
-  totalUsers: number;
-  admins: number;
-  notSetUp: number;
-  byGrade: [string, number][];
-  byMadhhab: [string, number][];
-  french: number;
-  avgPercent: number | null;
-  avgCount: number;
+interface UserRow extends Profile {
+  // Completion in the user's active grade; null until setup is done.
+  percent: number | null;
 }
 
 function countBy<T>(items: T[], key: (x: T) => string): [string, number][] {
@@ -21,7 +16,7 @@ function countBy<T>(items: T[], key: (x: T) => string): [string, number][] {
   return [...m.entries()].sort((a, b) => b[1] - a[1]);
 }
 
-async function loadAdminStats(): Promise<AdminStats> {
+async function loadUsers(): Promise<UserRow[]> {
   const profiles = await fetchAll<Profile>((from, to) =>
     supabase.from('profiles').select('*').order('created_at').range(from, to),
   );
@@ -43,42 +38,82 @@ async function loadAdminStats(): Promise<AdminStats> {
   }
 
   // Each student's completion is measured against their own active grade and choices.
-  const setUp = profiles.filter((p) => p.active_grade && p.madhhab);
-  const percents: number[] = [];
-  for (const p of setUp) {
-    try {
-      const c = await loadCurriculum(p.active_grade!);
-      const subjects = visibleSubjects(c, { madhhab: p.madhhab, showFrench: p.show_french });
-      percents.push(computeStats(subjects, byUser.get(p.id) ?? new Map()).percent);
-    } catch {
-      // Grade without a curriculum file: skip it in the average.
+  const users: UserRow[] = [];
+  for (const p of profiles) {
+    let percent: number | null = null;
+    if (p.active_grade && p.madhhab) {
+      try {
+        const c = await loadCurriculum(p.active_grade);
+        const subjects = visibleSubjects(c, { madhhab: p.madhhab, showFrench: p.show_french });
+        percent = computeStats(subjects, byUser.get(p.id) ?? new Map()).percent;
+      } catch {
+        // Grade without a curriculum file: leave it out of the average.
+      }
     }
+    users.push({ ...p, percent });
   }
-
-  return {
-    totalUsers: profiles.length,
-    admins: profiles.filter((p) => p.role === 'admin').length,
-    notSetUp: profiles.length - setUp.length,
-    byGrade: countBy(setUp, (p) => gradeLabel(p.active_grade)),
-    byMadhhab: countBy(setUp, (p) => madhhabName(p.madhhab)),
-    french: setUp.filter((p) => p.show_french).length,
-    avgPercent: percents.length ? Math.round(percents.reduce((a, b) => a + b, 0) / percents.length) : null,
-    avgCount: percents.length,
-  };
+  return users;
 }
 
 export function AdminPage() {
-  const [stats, setStats] = useState<AdminStats | null>(null);
+  const { profile: me } = useAuth();
+  const [users, setUsers] = useState<UserRow[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState('');
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [roleError, setRoleError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadAdminStats()
-      .then(setStats)
+  const reload = useCallback(() => {
+    loadUsers()
+      .then(setUsers)
       .catch((err: unknown) => setError(err instanceof Error ? err.message : String(err)));
   }, []);
 
-  if (error) return <p className="error">تعذّر تحميل الإحصائيات: {error}</p>;
-  if (!stats) return <p className="muted">جارٍ التحميل…</p>;
+  useEffect(reload, [reload]);
+
+  const stats = useMemo(() => {
+    if (!users) return null;
+    const setUp = users.filter((u) => u.active_grade && u.madhhab);
+    const percents = users.map((u) => u.percent).filter((p): p is number => p !== null);
+    return {
+      totalUsers: users.length,
+      admins: users.filter((u) => u.role === 'admin').length,
+      notSetUp: users.length - setUp.length,
+      byGrade: countBy(setUp, (u) => gradeLabel(u.active_grade)),
+      byMadhhab: countBy(setUp, (u) => madhhabName(u.madhhab)),
+      french: setUp.filter((u) => u.show_french).length,
+      avgPercent: percents.length ? Math.round(percents.reduce((a, b) => a + b, 0) / percents.length) : null,
+      avgCount: percents.length,
+    };
+  }, [users]);
+
+  const changeRole = async (user: UserRow, role: Role) => {
+    const who = user.display_name || user.email || 'المستخدم ده';
+    const question =
+      role === 'admin'
+        ? `تخلّي ${who} admin؟ هيقدر يشوف بيانات كل المستخدمين ويغيّر أدوارهم.`
+        : `تشيل صلاحية الـ admin من ${who}؟`;
+    if (!window.confirm(question)) return;
+    setBusyId(user.id);
+    setRoleError(null);
+    const { error: err } = await supabase.from('profiles').update({ role }).eq('id', user.id);
+    setBusyId(null);
+    if (err) {
+      setRoleError(
+        err.message.includes('last admin') ? 'مينفعش تشيل آخر admin في الموقع.' : `ما اتغيّرش الدور: ${err.message}`,
+      );
+      return;
+    }
+    setUsers((list) => list?.map((u) => (u.id === user.id ? { ...u, role } : u)) ?? null);
+  };
+
+  if (error) return <p className="error">تعذّر تحميل البيانات: {error}</p>;
+  if (!users || !stats) return <p className="muted">جارٍ التحميل…</p>;
+
+  const q = query.trim().toLowerCase();
+  const shown = q
+    ? users.filter((u) => (u.email ?? '').toLowerCase().includes(q) || (u.display_name ?? '').toLowerCase().includes(q))
+    : users;
 
   return (
     <div className="stack">
@@ -111,6 +146,47 @@ export function AdminPage() {
       <section className="card">
         <h2>التوزيع على المذاهب</h2>
         <Table rows={stats.byMadhhab} empty="مفيش طلاب لسه." />
+      </section>
+
+      <section className="card">
+        <h2>المستخدمين والأدوار</h2>
+        <input
+          type="search"
+          className="search"
+          placeholder="دوّر بالإيميل أو الاسم"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        {roleError && <p className="error">{roleError}</p>}
+        <ul className="users">
+          {shown.map((u) => (
+            <li key={u.id} className="user-row">
+              <div className="user-info">
+                <span className="user-name">{u.display_name || '—'}</span>
+                <span className="muted small" dir="ltr">
+                  {u.email ?? '—'}
+                </span>
+                <span className="muted small">
+                  {u.active_grade ? `${gradeLabel(u.active_grade)} · ${madhhabName(u.madhhab)}` : 'لسه ما كمّلش الإعداد'}
+                  {u.percent !== null && ` · ${u.percent}%`}
+                </span>
+              </div>
+              <label className="role-select">
+                <span className="sr-only">الدور</span>
+                <select
+                  value={u.role}
+                  disabled={busyId === u.id || u.id === me?.id}
+                  title={u.id === me?.id ? 'مينفعش تغيّر دورك بنفسك' : undefined}
+                  onChange={(e) => void changeRole(u, e.target.value as Role)}
+                >
+                  <option value="student">طالب</option>
+                  <option value="admin">متحكم (admin)</option>
+                </select>
+              </label>
+            </li>
+          ))}
+          {shown.length === 0 && <li className="muted">مفيش نتايج.</li>}
+        </ul>
       </section>
     </div>
   );

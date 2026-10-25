@@ -37,6 +37,45 @@ function lessonsOf(curriculum) {
   return out;
 }
 
+// Quiz format: plan section 5 (mcq / true_false / fill / essay).
+function checkQuiz(where, q, lessonId) {
+  if (q.lessonId !== lessonId) err(`${where}: lessonId "${q.lessonId}" != file name`);
+  if (!q.quizId) err(`${where}: quizId is missing`);
+  if (!Number.isInteger(q.version) || q.version < 1) err(`${where}: version must be a positive integer`);
+  if (!q.title) err(`${where}: title is missing`);
+  if (!Array.isArray(q.questions) || q.questions.length === 0) {
+    err(`${where}: questions must be a non-empty array`);
+    return;
+  }
+  const ids = new Set();
+  for (const [i, x] of q.questions.entries()) {
+    const at = `${where} question ${x?.id ?? i + 1}`;
+    if (!x?.id) err(`${at}: id is missing`);
+    else if (ids.has(x.id)) err(`${at}: duplicate question id`);
+    ids.add(x?.id);
+    if (!x?.text) err(`${at}: text is missing`);
+    switch (x?.type) {
+      case 'mcq':
+        if (!Array.isArray(x.choices) || x.choices.length < 2) err(`${at}: mcq needs at least 2 choices`);
+        else if (!Number.isInteger(x.answer) || x.answer < 0 || x.answer >= x.choices.length) {
+          err(`${at}: answer must be a choice index (0-${x.choices.length - 1})`);
+        }
+        break;
+      case 'true_false':
+        if (typeof x.answer !== 'boolean') err(`${at}: answer must be true or false`);
+        break;
+      case 'fill':
+        if (!Array.isArray(x.answer) || x.answer.length === 0) err(`${at}: answer must be a non-empty array`);
+        break;
+      case 'essay':
+        if (!x.modelAnswer) err(`${at}: modelAnswer is missing`);
+        break;
+      default:
+        err(`${at}: unknown type "${x?.type}"`);
+    }
+  }
+}
+
 const baseArgIdx = process.argv.indexOf('--base');
 const base = (baseArgIdx > -1 ? process.argv[baseArgIdx + 1] : process.env.BASE_REF) || '';
 
@@ -114,7 +153,7 @@ for (const grade of gradeDirs) {
       const q = readJson(join(quizDir, f));
       const lessonId = f.replace(/\.json$/, '');
       if (!lessonsOf(c).some((x) => x.lesson.id === lessonId)) err(`quiz ${grade}/quizzes/${f}: no lesson ${lessonId}`);
-      if (q && q.lessonId !== lessonId) err(`quiz ${grade}/quizzes/${f}: lessonId "${q.lessonId}" != file name`);
+      if (q) checkQuiz(`quiz ${grade}/quizzes/${f}`, q, lessonId);
     }
   }
 }

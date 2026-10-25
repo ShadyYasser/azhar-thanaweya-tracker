@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useAuth } from '../auth/AuthProvider';
+import { PasswordForm } from '../components/PasswordForm';
 import { ProfileForm } from '../components/ProfileForm';
 
 export function SettingsPage() {
   const { profile, session, signOut } = useAuth();
   const [saved, setSaved] = useState(false);
+  const [passwordChanged, setPasswordChanged] = useState(false);
   if (!profile) return null;
 
   return (
@@ -26,6 +28,11 @@ export function SettingsPage() {
           تغيير الصف أو المذهب أو الفرنسية مش بيمسح أي تقدم؛ التقدم القديم بيتخبى بس، ويرجع لو رجعت لنفس
           الاختيار.
         </p>
+      </section>
+      <section className="card">
+        <h2>تغيير كلمة السر</h2>
+        <PasswordForm submitLabel="تغيير كلمة السر" onDone={() => setPasswordChanged(true)} />
+        {passwordChanged && <p className="info">تم تغيير كلمة السر.</p>}
       </section>
       <button className="btn ghost" onClick={() => void signOut()}>
         تسجيل الخروج

@@ -74,6 +74,7 @@ export type LessonStatus = 'not_started' | 'studied' | 'revised' | 'mastered';
 export interface Profile {
   id: string;
   display_name: string | null;
+  email: string | null;
   role: Role;
   madhhab: Madhhab | null;
   show_french: boolean;
@@ -92,4 +93,30 @@ export interface LessonProgress {
   confidence: number | null;
   notes: string | null;
   updated_at: string;
+}
+
+// Quiz files: content/grades/<grade>/quizzes/<lessonId>.json (plan section 5).
+
+export type QuizQuestion =
+  | { id: string; type: 'mcq'; text: string; choices: string[]; answer: number; explanation?: string }
+  | { id: string; type: 'true_false'; text: string; answer: boolean; explanation?: string }
+  | { id: string; type: 'fill'; text: string; answer: string[]; explanation?: string }
+  | { id: string; type: 'essay'; text: string; modelAnswer: string };
+
+export interface Quiz {
+  quizId: string;
+  lessonId: string;
+  version: number;
+  title: string;
+  questions: QuizQuestion[];
+}
+
+export interface QuizAttempt {
+  id: number;
+  lesson_id: string;
+  quiz_id: string;
+  quiz_version: number;
+  score: number;
+  max_score: number;
+  created_at: string;
 }

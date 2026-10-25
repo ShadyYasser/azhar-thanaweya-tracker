@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ProgressBar } from '../components/ProgressBar';
 import { useStudyData } from '../components/StudyData';
-import { needsMemorization } from '../lib/content';
+import { hasQuiz, needsMemorization } from '../lib/content';
 import { computeStats, STATUS_OPTIONS } from '../lib/progress';
 import type { Lesson, LessonStatus } from '../lib/types';
 
@@ -10,7 +10,7 @@ type TermFilter = 'all' | 1 | 2;
 
 export function SubjectPage() {
   const { subjectId } = useParams();
-  const { subjects, progress, loading, error, updateLesson } = useStudyData();
+  const { curriculum, subjects, progress, loading, error, updateLesson } = useStudyData();
   const [term, setTerm] = useState<TermFilter>('all');
   const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -99,6 +99,7 @@ export function SubjectPage() {
                 lesson={l}
                 status={progress.get(l.id)?.status ?? 'not_started'}
                 memorized={progress.get(l.id)?.memorized ?? false}
+                quiz={curriculum ? hasQuiz(curriculum.gradeCode, l.id) : false}
                 onChange={(c) => change(l.id, c)}
               />
             ))}
@@ -113,11 +114,13 @@ function LessonRow({
   lesson,
   status,
   memorized,
+  quiz,
   onChange,
 }: {
   lesson: Lesson;
   status: LessonStatus;
   memorized: boolean;
+  quiz: boolean;
   onChange: (c: { status?: LessonStatus; memorized?: boolean }) => void;
 }) {
   return (
@@ -147,6 +150,11 @@ function LessonRow({
             <input type="checkbox" checked={memorized} onChange={(e) => onChange({ memorized: e.target.checked })} />
             حفظت
           </label>
+        )}
+        {quiz && (
+          <Link to={`/quiz/${lesson.id}`} className="quiz-btn">
+            ابدأ الكويز
+          </Link>
         )}
       </div>
     </li>

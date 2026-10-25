@@ -15,13 +15,17 @@ npm run build            # typecheck + production build into dist/
 npm run check:content -- --base origin/main   # lesson-ID safety check (also runs in CI)
 ```
 
+Quizzes: add `content/grades/<grade>/quizzes/<lessonId>.json` (format in the plan, section 5;
+validated by the content check). The lesson shows a quiz button once the file exists.
+
 Every push to `main` runs the content check, builds, and deploys to GitHub Pages
 (`.github/workflows/deploy.yml`). Pull requests run the check and the build only.
 
 ## Database
 
 Apply the files in `supabase/migrations/` in order (Supabase SQL Editor or `supabase db push`).
-To make an account admin after it signs up:
+The first admin is set once from the SQL Editor; after that, admins change roles from
+the admin page (the last admin cannot be demoted). To make an account admin after it signs up:
 
 ```sql
 update public.profiles set role = 'admin'

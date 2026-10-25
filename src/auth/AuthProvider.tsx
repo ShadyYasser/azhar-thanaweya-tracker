@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
+import { clearRecovery, isRecoveryPending, onRecovery, supabase } from '../lib/supabase';
 import type { Profile } from '../lib/types';
 
 interface AuthState {
@@ -8,6 +8,9 @@ interface AuthState {
   profile: Profile | null;
   loading: boolean;
   error: string | null;
+  // True after opening a password-reset link, until a new password is set.
+  recovery: boolean;
+  finishRecovery: () => void;
   refreshProfile: () => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -21,6 +24,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // The user id the current `profile` value was loaded for.
   const [profileFor, setProfileFor] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [recovery, setRecovery] = useState(isRecoveryPending);
+
+  useEffect(() => onRecovery(() => setRecovery(true)), []);
+
+  const finishRecovery = useCallback(() => {
+    clearRecovery();
+    setRecovery(false);
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -57,13 +68,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [userId, loadProfile]);
 
   const signOut = useCallback(async () => {
+    finishRecovery();
     await supabase.auth.signOut();
-  }, []);
+  }, [finishRecovery]);
 
   const loading = !sessionReady || (userId !== null && profileFor !== userId);
 
   return (
-    <AuthContext.Provider value={{ session, profile, loading, error, refreshProfile, signOut }}>
+    <AuthContext.Provider
+      value={{ session, profile, loading, error, recovery, finishRecovery, refreshProfile, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -7,9 +7,11 @@ import { HomePage } from './pages/HomePage';
 import { SubjectPage } from './pages/SubjectPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { AdminPage } from './pages/AdminPage';
+import { ResetPasswordPage } from './pages/ResetPasswordPage';
+import { QuizPage } from './pages/QuizPage';
 
 export function App() {
-  const { session, profile, loading, error, signOut } = useAuth();
+  const { session, profile, loading, error, recovery, signOut } = useAuth();
 
   if (loading) return <div className="center muted">جارٍ التحميل…</div>;
 
@@ -20,6 +22,8 @@ export function App() {
       </Routes>
     );
   }
+
+  if (recovery) return <ResetPasswordPage />;
 
   if (!profile) {
     return (
@@ -53,6 +57,7 @@ export function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/subject/:subjectId" element={<SubjectPage />} />
+        <Route path="/quiz/:lessonId" element={<QuizPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         {profile.role === 'admin' && <Route path="/admin" element={<AdminPage />} />}
         <Route path="*" element={<Navigate to="/" replace />} />

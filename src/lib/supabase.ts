@@ -14,6 +14,30 @@ export const supabase = createClient(url, key, {
 
 export const siteUrl = `${window.location.origin}${import.meta.env.BASE_URL}`;
 
+// A password-reset link signs the user in and fires PASSWORD_RECOVERY while the client
+// initializes, possibly before React subscribes, so remember it from module load.
+let recoveryPending = false;
+const recoveryListeners = new Set<() => void>();
+supabase.auth.onAuthStateChange((event) => {
+  if (event === 'PASSWORD_RECOVERY') {
+    recoveryPending = true;
+    recoveryListeners.forEach((fn) => fn());
+  }
+});
+
+export function isRecoveryPending(): boolean {
+  return recoveryPending;
+}
+
+export function onRecovery(fn: () => void): () => void {
+  recoveryListeners.add(fn);
+  return () => recoveryListeners.delete(fn);
+}
+
+export function clearRecovery(): void {
+  recoveryPending = false;
+}
+
 // PostgREST returns at most 1000 rows per request; page through larger results.
 export async function fetchAll<T>(
   build: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>,
